@@ -1,0 +1,10 @@
+@import '../../styles/base.scss';
+.TournamentPage {
+  .meta-data {
+    font-size: $font2;
+    margin-bottom: $margin-base;
+  }
+  .meta-data-title {
+    margin-bottom: 0px;
+  }
+}

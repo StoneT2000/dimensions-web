@@ -5,10 +5,10 @@ import { Table, message} from 'antd';
 import DefaultLayout from '../../components/layouts/default';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
-import { getDimension, getMatchesFromDimension } from '../../actions/dimensions';
+import { getDimension, getMatchesFromDimension, getTournamentsFromDimension } from '../../actions/dimensions';
 
 // NOTE!! Can import outside src as long as we dont use instanceof dimension or actually use it, we can just it for typings
-import { DimensionType, Match } from 'dimensions-ai';
+import { DimensionType, Match, Tournament } from 'dimensions-ai';
 import DimensionCard from '../../components/DimensionCard';
 import MatchActionButton from '../../components/MatchActionButton';
 
@@ -20,6 +20,7 @@ function DimensionsPage(props: any) {
   const [dimension, setDimension] = useState<DimensionType>();
   // const [matches, setMatches] = useState<Array<Match>>([]);
   const [data, setData] = useState<Array<any>>([]);
+  const [tourneyData, setTourneyData] = useState<Array<any>>([]);
   const columns = [
     {
       title: 'Match Name',
@@ -43,6 +44,18 @@ function DimensionsPage(props: any) {
       }
     }
   ];
+
+  const tourneyColumns = [
+    {
+      title: 'Tournament Name',
+      dataIndex: 'tourneyname',
+      render: (tournament: Tournament) => <Link to={`${history.location.pathname}/tournaments/${tournament.id}`}>{tournament.name}</Link>,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+    },
+  ]
   
   const startRefresh = () => {
      intv = setInterval(() => {
@@ -61,13 +74,22 @@ function DimensionsPage(props: any) {
               }
             });
             setData(newData);
-          })
+          });
+          getTournamentsFromDimension(res.id).then((res) => {
+            let newData = res.map((tournament: Tournament, index) => {
+              return {
+                key: index,
+                tourneyname: tournament,
+                status: tournament.status,
+              }
+            });
+            setTourneyData(newData);
+          });
         }
         else {
           console.error("something wrong happened");
         }
       }).catch(() => {
-        message.error('Backend is not setup');
         clearInterval(intv);
       });
     }, 500);
@@ -92,6 +114,11 @@ function DimensionsPage(props: any) {
               Used Design: { dimension.design.name } <br />
               Logging Level: {dimension.configs.loggingLevel}
             </p>
+            <h4>Ongoing Tournamnets</h4>
+            <Table className='tournamentTable'
+              columns={tourneyColumns}
+              dataSource={tourneyData}
+            />
             <h4>Ongoing Matches</h4>
             <Table className='matchTable'
               columns={columns}

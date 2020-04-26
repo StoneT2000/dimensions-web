@@ -6,6 +6,7 @@ import './styles/index.scss';
 import MainPage from './pages/MainPage';
 import DimensionPage from './pages/DimensionsPage';
 import MatchPage from './pages/MatchPage';
+import TournamentPage from './pages/TournamentPage';
 
 function App() {
   const [user, setUser] = useState({loggedIn: false});
@@ -18,11 +19,7 @@ function App() {
             <Route path="/dimensions" exact component={DimensionPage.DimensionsListPage} />
             <Route path="/dimensions/:id" exact component={DimensionPage} />
             <Route path="/dimensions/:id/matches/:matchID" exact component={MatchPage} />
-            {/* <Route path="/register" exact component={RegisterUser} />
-            <Route path="/login" exact component={LoginUser} />
-            <Route path="/dashboard" exact component={DashboardPage} />
-            <Route path="/explore" exact render={() => <Explore />} />
-            <Route path="/confirm" exact component={ConfirmEmailPage} /> */}
+            <Route path="/dimensions/:id/tournaments/:tournamentID" exact component={TournamentPage} />
           </UserProvider>
         </Switch>
       </div>

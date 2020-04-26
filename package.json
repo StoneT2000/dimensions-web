@@ -1,6 +1,6 @@
 {
   "name": "@dimensions-ai/web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "antd": "^4.1.0",
     "axios": "^0.19.2",
