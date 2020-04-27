@@ -11,6 +11,7 @@ import { getDimension, getMatchesFromDimension, getTournamentsFromDimension } fr
 import { DimensionType, Match, Tournament } from 'dimensions-ai';
 import DimensionCard from '../../components/DimensionCard';
 import MatchActionButton from '../../components/MatchActionButton';
+import { join } from 'path';
 
 
 let intv: any;
@@ -25,7 +26,8 @@ function DimensionsPage(props: any) {
     {
       title: 'Match Name',
       dataIndex: 'matchname',
-      render: (match: Match) => <Link to={`${history.location.pathname}/matches/${match.id}`}>{match.name}</Link>,
+      render: (match: Match) => 
+        <Link to={`${join(history.location.pathname,`/matches/${match.id}`)}`}>{match.name}</Link>,
     },
     {
       title: 'Creation Date',
@@ -40,7 +42,7 @@ function DimensionsPage(props: any) {
       dataIndex: 'action',
       render: (match: Match) => {
         //@ts-ignore
-        return (<MatchActionButton match={match} />)
+        return (<MatchActionButton match={match} update={update} />)
       }
     }
   ];
@@ -49,7 +51,7 @@ function DimensionsPage(props: any) {
     {
       title: 'Tournament Name',
       dataIndex: 'tourneyname',
-      render: (tournament: Tournament) => <Link to={`${history.location.pathname}/tournaments/${tournament.id}`}>{tournament.name}</Link>,
+      render: (tournament: Tournament) => <Link to={`${join(window.location.pathname,`/tournaments/${tournament.id}`)}`}>{tournament.name}</Link>,
     },
     {
       title: 'Status',
@@ -59,44 +61,52 @@ function DimensionsPage(props: any) {
   
   const startRefresh = () => {
      intv = setInterval(() => {
-      getDimension(params.id).then((res) => {
-        if (!(res instanceof Array))  {
-          setDimension(res);
-          getMatchesFromDimension(res.id).then((res) => {
-            // setMatches(res);
-            let newData = res.map((match: Match, index) => {
-              return {
-                key: index,
+      
+    }, 1000);
+  }
+  const update = () => {
+    getDimension(params.id).then((res) => {
+      if (!(res instanceof Array))  {
+        setDimension(res);
+        getMatchesFromDimension(res.id).then((res) => {
+          let newData: any[] = [];
+          let keys = Object.keys(res);
+          if (keys.length > 0) {
+            for (let key in res) {
+              let match = res[key];
+              newData.push({
+                key: key,
                 matchname: match,
                 creationdate: match.creationDate,
                 status: match.matchStatus,
                 action: match
-              }
-            });
+              });
+            }
             setData(newData);
+          }
+        });
+        getTournamentsFromDimension(res.id).then((res) => {
+          let newData = res.map((tournament: Tournament, index) => {
+            return {
+              key: index,
+              tourneyname: tournament,
+              status: tournament.status,
+            }
           });
-          getTournamentsFromDimension(res.id).then((res) => {
-            let newData = res.map((tournament: Tournament, index) => {
-              return {
-                key: index,
-                tourneyname: tournament,
-                status: tournament.status,
-              }
-            });
-            setTourneyData(newData);
-          });
-        }
-        else {
-          console.error("something wrong happened");
-        }
-      }).catch(() => {
-        clearInterval(intv);
-      });
-    }, 500);
+          setTourneyData(newData);
+        });
+      }
+      else {
+        console.error("something wrong happened");
+      }
+    }).catch(() => {
+      clearInterval(intv);
+    });
   }
   useEffect(() => {
     if (params.id) {
-      startRefresh();
+      update();
+      // startRefresh();
     }
     return () => {
       clearInterval(intv);
@@ -114,7 +124,7 @@ function DimensionsPage(props: any) {
               Used Design: { dimension.design.name } <br />
               Logging Level: {dimension.configs.loggingLevel}
             </p>
-            <h4>Ongoing Tournamnets</h4>
+            <h4>Ongoing Tournaments</h4>
             <Table className='tournamentTable'
               columns={tourneyColumns}
               dataSource={tourneyData}

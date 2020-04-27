@@ -16,3 +16,25 @@ export const getRanks = async (dimensionID: number, tournamentID: number): Promi
     });
   });
 }
+
+export const getMatches = async (dimensionID: number, tournamentID: number): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/match`).then((res: AxiosResponse) => {
+      resolve(res.data.matches);
+    }).catch((error) => {
+      message.error(error.message);
+      reject(error);
+    });
+  });
+}
+
+export const getMatchQueue = async (dimensionID: number, tournamentID: number): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/matchQueue`).then((res: AxiosResponse) => {
+      resolve(res.data.matches);
+    }).catch((error) => {
+      message.error(error.message);
+      reject(error);
+    });
+  });
+}

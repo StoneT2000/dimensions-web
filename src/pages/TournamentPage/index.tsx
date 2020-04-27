@@ -117,7 +117,7 @@ function TournamentPage(props: any) {
   useEffect(() => {
     if (params.tournamentID) {
       update();
-      startRefresh();
+      // startRefresh();
     }
     return () => {
       clearInterval(intv);

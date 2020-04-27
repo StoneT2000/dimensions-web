@@ -39,31 +39,35 @@ function MatchPage() {
   ];
   const startRefresh = () => {
     intv = setInterval(() => {
-      getMatchFromDimension(params.id, params.matchID).then((res) => {
-        if (!(res instanceof Array))  {
-          setMatch(res);
-          let newData = res.agents.map((agent) => {
-            return {
-              src: agent.src,
-              agentname: agent,
-              creationdate: agent.creationDate,
-              status: agent.status
-            }
-          })
-          setData(newData);
-        }
-        else {
-          console.error("something wrong happened");
-        }
-      }).catch((error) => {
-        message.error('Backend is not setup');
-        clearInterval(intv);
-      });
+      
     }, 500);
+  }
+  const update = () => {
+    getMatchFromDimension(params.id, params.matchID).then((res) => {
+      if (!(res instanceof Array))  {
+        setMatch(res);
+        let newData = res.agents.map((agent) => {
+          return {
+            src: agent.src,
+            agentname: agent,
+            creationdate: agent.creationDate,
+            status: agent.status
+          }
+        })
+        setData(newData);
+      }
+      else {
+        console.error("something wrong happened");
+      }
+    }).catch((error) => {
+      history.push('../');
+      clearInterval(intv);
+    });
   }
   useEffect(() => {
     if (params.matchID) {
-      startRefresh();
+      // startRefresh();
+      update();
     }
     return () => {
       clearInterval(intv);
@@ -78,13 +82,12 @@ function MatchPage() {
             <h4 className='meta-data-title'>Metadata</h4>
             <p className='meta-data'>
               id: {match.id} <br />
-              Used Design: { match.design.name } <br />
               Creation Date: {match.creationDate} <br />
               Match Status: {match.matchStatus} <br />
               Time Step: {match.timeStep}
             </p>
             <h4>Match Actions</h4>
-            <MatchActionButton match={match}/>
+            <MatchActionButton match={match} update={update}/>
             <h4>Match Results:</h4>
             {match.results ? <a target='_blank' href={process.env.REACT_APP_API + `/api/dimensions/${params.id}/match/${params.matchID}/results`}>Results</a> : 'No results yet'}
             <h4>Agents / Players</h4>

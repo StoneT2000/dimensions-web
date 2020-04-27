@@ -20,7 +20,7 @@ export const getDimension = async (id: number = -1): Promise<Array<DimensionType
 }
 
 
-export const getMatchesFromDimension = async (dimensionID: number): Promise<Array<Match>> => {
+export const getMatchesFromDimension = async (dimensionID: number): Promise<{[k in string]: Match}> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match`).then((res: AxiosResponse) => {
       resolve(res.data.matches);
