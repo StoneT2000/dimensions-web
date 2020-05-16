@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { DimensionType } from 'dimensions-ai';
+import { DimensionType, nanoid } from 'dimensions-ai';
 
 // Returns all dimensions if no input
-export const getDimension = async (id: number = -1): Promise<Array<DimensionType> | DimensionType> => {
+export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
   return new Promise((resolve, reject) => {
-    axios.get(process.env.REACT_APP_API + '/api/dimensions/' + (id === -1 ? '' : id)).then((res: AxiosResponse) => {
-      if (id === -1) {
+    axios.get(process.env.REACT_APP_API + '/api/dimensions/' + (id === '-1' ? '' : id)).then((res: AxiosResponse) => {
+      if (id === '-1') {
         resolve(res.data.dimensions);
       }
       else {
@@ -18,7 +18,7 @@ export const getDimension = async (id: number = -1): Promise<Array<DimensionType
 }
 
 
-export const runMatch = async (dimensionID:number, matchID: number): Promise<any> => {
+export const runMatch = async (dimensionID:nanoid, matchID: nanoid): Promise<any> => {
   return new Promise((resolve, reject) => {
     axios.post(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}/run`).then((res: AxiosResponse) => {
       resolve(res);
@@ -28,7 +28,7 @@ export const runMatch = async (dimensionID:number, matchID: number): Promise<any
   })
 }
 
-export const stopMatch = async (dimensionID:number, matchID: number): Promise<any> => {
+export const stopMatch = async (dimensionID:nanoid, matchID: nanoid): Promise<any> => {
   return new Promise((resolve, reject) => {
     axios.post(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}/stop`).then((res: AxiosResponse) => {
       resolve(res);
@@ -38,7 +38,7 @@ export const stopMatch = async (dimensionID:number, matchID: number): Promise<an
   })
 }
 
-export const resumeMatch = async (dimensionID:number, matchID: number): Promise<any> => {
+export const resumeMatch = async (dimensionID:nanoid, matchID: nanoid): Promise<any> => {
   return new Promise((resolve, reject) => {
     axios.post(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}/run`).then((res: AxiosResponse) => {
       resolve(res);
@@ -48,17 +48,7 @@ export const resumeMatch = async (dimensionID:number, matchID: number): Promise<
   })
 }
 
-export const reRunMatch = async (dimensionID:number, matchID: number): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    axios.post(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}/run`).then((res: AxiosResponse) => {
-      resolve(res);
-    }).catch((error) => {
-      reject(error);
-    })
-  })
-}
-
-export const removeMatch = async (dimensionID:number, matchID: number): Promise<any> => {
+export const removeMatch = async (dimensionID:nanoid, matchID: nanoid): Promise<any> => {
   return new Promise((resolve, reject) => {
     axios.delete(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}`).then((res: AxiosResponse) => {
       resolve(res);

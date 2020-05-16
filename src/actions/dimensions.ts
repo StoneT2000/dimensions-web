@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
-import { DimensionType, Match, Tournament } from 'dimensions-ai';
+import { DimensionType, Match, Tournament, nanoid } from 'dimensions-ai';
 import { message } from 'antd';
 
 // Returns all dimensions if no input
-export const getDimension = async (id: number = -1): Promise<Array<DimensionType> | DimensionType> => {
+export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
   return new Promise((resolve, reject) => {
-    axios.get(process.env.REACT_APP_API + '/api/dimensions/' + (id === -1 ? '' : id)).then((res: AxiosResponse) => {
-      if (id === -1) {
+    axios.get(process.env.REACT_APP_API + '/api/dimensions/' + (id === '-1' ? '' : id)).then((res: AxiosResponse) => {
+      if (id === '-1') {
         resolve(res.data.dimensions);
       }
       else {
@@ -20,7 +20,7 @@ export const getDimension = async (id: number = -1): Promise<Array<DimensionType
 }
 
 
-export const getMatchesFromDimension = async (dimensionID: number): Promise<{[k in string]: Match}> => {
+export const getMatchesFromDimension = async (dimensionID: nanoid): Promise<{[k in string]: Match}> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match`).then((res: AxiosResponse) => {
       resolve(res.data.matches);
@@ -30,7 +30,7 @@ export const getMatchesFromDimension = async (dimensionID: number): Promise<{[k 
     });
   });
 }
-export const getMatchFromDimension = async (dimensionID: number, matchID: number): Promise<Match> => {
+export const getMatchFromDimension = async (dimensionID: nanoid, matchID: nanoid): Promise<Match> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}`).then((res: AxiosResponse) => {
       resolve(res.data.match);
@@ -40,7 +40,7 @@ export const getMatchFromDimension = async (dimensionID: number, matchID: number
     });
   });
 }
-export const getTournamentFromDimension = async (dimensionID: number, tournamentID: number): Promise<Tournament> => {
+export const getTournamentFromDimension = async (dimensionID: nanoid, tournamentID: nanoid): Promise<Tournament> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}`).then((res: AxiosResponse) => {
       resolve(res.data.tournament);
@@ -52,7 +52,7 @@ export const getTournamentFromDimension = async (dimensionID: number, tournament
 }
 
 
-export const getTournamentsFromDimension = async (dimensionID: number): Promise<Array<Tournament>> => {
+export const getTournamentsFromDimension = async (dimensionID: nanoid): Promise<Array<Tournament>> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament`).then((res: AxiosResponse) => {
       resolve(res.data.tournaments);

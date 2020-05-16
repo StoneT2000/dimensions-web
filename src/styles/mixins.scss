@@ -11,3 +11,15 @@
   margin-left: -$container-left-margin;
   margin-right: -$container-right-margin;
 }
+
+/*
+Keeps text left padded by 10%, and then by 24px on small screens
+*/
+@mixin leftPaddedText {
+  margin-left: 10%;
+  margin-right: 10%;
+  @media screen and (max-width: $xs){
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+}

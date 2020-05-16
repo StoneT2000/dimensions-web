@@ -1,0 +1,14 @@
+@import '../../../styles/base.scss';
+.LoginPage {
+
+  .danger {
+    color: $danger;
+  }
+  .loginButton {
+    margin-top: $margin-base;
+  }
+  .loginCard {
+    margin: auto;
+    @include smack-center;
+  }
+}

@@ -1,20 +1,24 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Menu } from 'antd';
 import './index.scss';
-// import { useHistory } from 'react-router-dom';
 
-// import UserContext from '../../UserContext'
 function Header() {
-  // let history = useHistory();
   const [key, setKey] = useState();
-
-  // const userHooks = useContext(UserContext);
-
-
+  const params: any = useParams();
   const handleClick = (e: any) => {
     setKey(e.key);
   };
+
+  const renderLoginItems = () => {
+    return (
+      <Menu.Item key="dimensions">
+        <Link to="/dimensions" rel="noopener noreferrer">
+          Login
+        </Link>
+      </Menu.Item>
+    )
+  }
 
   return (
     <Menu onClick={handleClick} selectedKeys={key} mode="horizontal" className="Header">
@@ -31,6 +35,9 @@ function Header() {
           Dimensions
         </Link>
       </Menu.Item>
+      { params.id &&
+        renderLoginItems()
+      }
       <Menu.Item className="empty">
       </Menu.Item>
     </Menu>

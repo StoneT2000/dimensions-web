@@ -2,8 +2,8 @@
 .Main {
   #title {
     color: $white;
-    display: inline;
-    margin-left: 10%;
+    display: inline-block;
+    @include leftPaddedText;
   }
   @include noContainer;
   .hero {
@@ -12,10 +12,15 @@
     padding-top: 60px;
     min-height: calc(100vh - 120px);
     .subtext {
-      margin-left: 10%;
+      @include leftPaddedText;
       font-size: $font4;
       color: $white;
     }
+  }
+  .dimensions-list {
+    margin-top: 24px;
+    display: flex;
+    margin-left: calc(10% - 24px);
   }
   .content {
     width:100%;
@@ -35,7 +40,7 @@
     z-index:10;
   }
   .main-section .statement {
-    font-size:40px;
+    font-size: $font4;
     font-weight:300;
   }
 }

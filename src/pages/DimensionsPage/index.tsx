@@ -42,7 +42,7 @@ function DimensionsPage(props: any) {
       dataIndex: 'action',
       render: (match: Match) => {
         //@ts-ignore
-        return (<MatchActionButton match={match} update={update} />)
+        return (<MatchActionButton match={match} update={update} dimensionID={params.id}/>)
       }
     }
   ];
@@ -86,7 +86,7 @@ function DimensionsPage(props: any) {
           }
         });
         getTournamentsFromDimension(res.id).then((res) => {
-          let newData = res.map((tournament: Tournament, index) => {
+          let newData = Object.values(res).map((tournament: Tournament, index) => {
             return {
               key: index,
               tourneyname: tournament,

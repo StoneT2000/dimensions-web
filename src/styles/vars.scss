@@ -27,12 +27,13 @@ $bg1hover: #172a3c;
 
 
 // font sizing
-$font1: 14px;
-$font2: 18px;
-$font3: 22px;
-$font4: 30px;
-$font5: 42px;
-$font6: 58px;
+$font1: 1rem;
+$font2: 1.25rem;
+$font3: 1.5rem;
+$font4: 2rem;
+$font5: 3rem;
+$font6: 4rem;
+$font7: 5.9375rem;
 
 // box shadows!
 $bx1: 0 2px 8px 0 rgba(96,101,123,.14);
@@ -46,3 +47,9 @@ $radius-base2: 8px;
 // container margins
 $container-right-margin: 48px;
 $container-left-margin: 48px;
+
+
+// screen sizes
+$xs: 768px;
+$sm: 992px;
+$md: 1200px;

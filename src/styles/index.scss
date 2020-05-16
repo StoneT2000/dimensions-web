@@ -127,3 +127,21 @@ a[l]:hover::before, a[l]:focus::before {
 //     font-weight: 300;
 //     text-rendering: optimizeLegibility;
 // }
+
+@media only screen and (max-width: $md) {
+  html {
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: $sm) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: $xs) {
+  html {
+    font-size: 11px;
+  }
+}
+

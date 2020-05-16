@@ -5,10 +5,9 @@ import { getDimension } from '../../actions/dimensions';
 import DimensionCard from '../../components/DimensionCard';
 import { DimensionType, Match } from 'dimensions-ai';
 function MainPage(props: any) {
-  const [dimensions, setDimensions] = useState<Array<DimensionType>>([]);
+  const [dimensions, setDimensions] = useState<{[x in string]: DimensionType}>({});
   useEffect(() => {
     getDimension().then((res: any) => {
-      console.log(res);
       //@ts-ignore
       setDimensions(res);
     }).catch((error) => {
@@ -21,14 +20,18 @@ function MainPage(props: any) {
         <div className='hero'>
           <h1 id='title'>Dimensions Station</h1>
           <p className='subtext'>Observe your Dimensions, Matches, and Tournaments, and basically everything</p>
-          {
-            dimensions.length &&
-              dimensions.map((dim: DimensionType) => {
+          <div className='dimensions-list'>
+            {
+              dimensions &&
+              Object.values(dimensions).map((key, ind) => {
+                console.log(key);
+                let dim = key;
                 return (
                   <DimensionCard dimension={dim}/>
                 )
               })
-          }
+            }
+          </div>
         </div>
       </div>
     </DefaultLayout>
