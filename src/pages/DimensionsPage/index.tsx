@@ -146,23 +146,21 @@ function DimensionsPage(props: any) {
 
 function DimensionsListPage() {
   const params: any = useParams();
-  const [dimensions, setDimensions] = useState<Array<DimensionType>>([]);
+  const [dimensions, setDimensions] = useState<{[x in string]: DimensionType}>({});
   useEffect(() => {
-    getDimension().then((res) => {
-      if (res instanceof Array)  {
-        setDimensions(res);
-      }
-      else {
-        console.error("something wrong happened");
-      }
+    getDimension().then((res: any) => {
+      //@ts-ignore
+      setDimensions(res);
+    }).catch((error) => {
+      console.error(error);
     })
   }, []);
   return (
     <DefaultLayout>
       <div className='DimensionPage'>
         <h2>Dimensions Observed</h2>
-        {dimensions.length &&
-          dimensions.map((dimension: DimensionType) => {
+        {dimensions &&
+          Object.values(dimensions).map((dimension: DimensionType) => {
             return (
               <DimensionCard key={dimension.id} dimension={dimension}/>
             )

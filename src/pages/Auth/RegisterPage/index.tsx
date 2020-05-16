@@ -40,7 +40,6 @@ function RegisterPage() {
                       <Input
                         type='text'
                         placeholder='Username'
-                        id="validating"
                         name='username'
                       />
                     </Form.Item>

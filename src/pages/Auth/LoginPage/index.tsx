@@ -39,11 +39,10 @@ function LoginPage() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Controller 
                   as={
-                    <Form.Item hasFeedback>
+                    <Form.Item>
                       <Input
                         type='text'
                         placeholder='Username'
-                        id="validating"
                         name='username'
                       />
                     </Form.Item>

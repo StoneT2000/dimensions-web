@@ -4,19 +4,24 @@ import DefaultLayout from "../../components/layouts/default";
 import { Form, Input, Button, Upload, message } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import Card from '../../components/Card';
-import { useParams } from 'react-router-dom';
+import { useParams, Redirect, useHistory } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
 import TournamentContext from '../../contexts/tournament';
 import { uploadBot } from '../../actions/tournament';
 import UserContext from '../../UserContext';
+import path from 'path';
+
+
 function UploadBotPage(props: any) {
   const { register, handleSubmit, errors, control, setValue, getValues } = useForm();
   const [botFile, setFile] = useState<any>();
   const { tournament } = useContext(TournamentContext);
   const { user } = useContext(UserContext);
+  const history = useHistory();
   const params: any = useParams();
   useEffect(() => {
-    console.log(tournament);
+    !user.loggedIn && message.info('You need to login to upload a bot') &&
+    history.push(path.join(window.location.pathname, '../../../login'));
   }, []);
   const onSubmit = (values: any) => {
     console.log(values);
