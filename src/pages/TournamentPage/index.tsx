@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './index.scss';
 import { Tournament } from 'dimensions-ai';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import DefaultLayout from "../../components/layouts/default";
 import { getTournamentFromDimension } from '../../actions/dimensions';
 import { getRanks } from '../../actions/tournament';
 import TournamentActionButton from '../../components/TournamentActionButton';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import UserContext from '../../UserContext';
+import TournamentContext from '../../contexts/tournament';
+import BackLink from '../../components/BackLink';
+import path from 'path';
 let intv: any;
 
 const trueskillCols = [
@@ -84,47 +87,45 @@ const eloCols = [
 
 
 function TournamentPage(props: any) {
+  const history = useHistory();
   let {user, setUser} = useContext(UserContext);
+  const { tournament, setTournament } = useContext(TournamentContext);
   const params: any = useParams();
-  const [tournament, setTournament] = useState<Tournament>();
+  // const [tournament, setTournament] = useState<Tournament>();
   //@ts-ignore
   const [ranksystem, setRankSystem] = useState<Tournament.RankSystem>('trueskill');
   const [data, setData] = useState<any>([]);
   const update = () => {
-    getTournamentFromDimension(params.id, params.tournamentID).then((res) => {
-      setTournament(res);
+    let rankSystem = tournament.configs.rankSystem;
+    setRankSystem(rankSystem);
 
-      let rankSystem = res.configs.rankSystem;
-      setRankSystem(rankSystem);
-
-      getRanks(params.id, params.tournamentID).then((res) => {
-        console.log(res);
-        let newData = [];
-        newData = res.map((info: any, ind: number) => {
-          return {
-            key: `${ind}`,
-            pname: info.name,
-            score: info,
-            matchesPlayed: info.matchesPlayed
-          }
-        });
-        setData(newData);
+    getRanks(params.id, params.tournamentID).then((res) => {
+      console.log(res);
+      let newData = [];
+      newData = res.map((info: any, ind: number) => {
+        return {
+          key: `${ind}`,
+          pname: info.name,
+          score: info,
+          matchesPlayed: info.matchesPlayed
+        }
       });
-    }).catch((error) => {
-      clearInterval(intv);
+      setData(newData);
     });
-    
   }
   useEffect(() => {
-    if (params.tournamentID) {
-      update();
-    }
-  }, []);
+    update();
+  }, [tournament]);
   return (
     <DefaultLayout>
       <div className='TournamentPage'>
-        <h1>Tournament Details</h1>
-        <h4 className='meta-data-title'>Metadata</h4>
+        <br />
+        <BackLink to='../../'/>
+        <h2>{tournament.name}</h2>
+        <Button onClick={() => {
+          history.push(path.join(history.location.pathname, 'upload'));
+        }}>Upload Bot</Button>
+        <h4 className='meta-data-title'>Tournament Metadata</h4>
         {tournament && 
           [<p className='meta-data'>
             id: {tournament.id} <br />

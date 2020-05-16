@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 import { message } from 'antd';
-import { setCookie } from '../utils/cookie';
+import { setCookie, deleteCookie } from '../utils/cookie';
 import { nanoid } from 'dimensions-ai';
 import { User } from '../UserContext';
+import { COOKIE_NAME } from '../configs';
 
 export const registerUser = async (dimensionID: nanoid, data: { username: string, password: string}) => {
   return new Promise((resolve, reject) => {
@@ -15,6 +16,9 @@ export const registerUser = async (dimensionID: nanoid, data: { username: string
   });
 }
 
+export const logoutUser = () => {
+  deleteCookie(COOKIE_NAME);
+}
 export const getUserFromToken = (token: string): User => {
   let res = tokenGetClaims(token);
   return {
@@ -39,7 +43,7 @@ export const tokenGetClaims = (token: string): any => {
 export const loginUser = async (dimensionID: nanoid, data: { username: string, password: string}) => {
   return new Promise((resolve, reject) => {
     axios.post(process.env.REACT_APP_API + '/api/dimensions/' + dimensionID + '/auth/login', data).then((res: AxiosResponse) => {
-      setCookie('dimensions_user_c', res.data.token, 7);
+      setCookie(COOKIE_NAME, res.data.token, 7);
       resolve(res.data.token);
     }).catch((error) => {
       message.error(error.response.data.error.message);

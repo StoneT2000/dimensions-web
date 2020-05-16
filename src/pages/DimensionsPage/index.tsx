@@ -12,6 +12,7 @@ import { DimensionType, Match, Tournament } from 'dimensions-ai';
 import DimensionCard from '../../components/DimensionCard';
 import MatchActionButton from '../../components/MatchActionButton';
 import { join } from 'path';
+import BackLink from '../../components/BackLink';
 
 
 let intv: any;
@@ -115,10 +116,12 @@ function DimensionsPage(props: any) {
   return (
     <DefaultLayout>
       <div className='DimensionPage'>
+        <br />
+        <BackLink to='../../'/>
         {dimension &&
           <div>
             <h2>{dimension.name}</h2>
-            <h4 className='meta-data-title'>Metadata</h4>
+            <h4 className='meta-data-title'>Dimension Metadata</h4>
             <p className='meta-data'>
               id: {dimension.id} <br />
               Used Design: { dimension.design.name } <br />

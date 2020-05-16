@@ -5,14 +5,14 @@ import Card from '../../../components/Card';
 import { Form, Input, message, Button } from 'antd';
 import { useForm, Controller, ErrorMessage } from 'react-hook-form';
 import { loginUser, getUserFromToken } from '../../../actions/auth';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import UserContext from '../../../UserContext';
 
 function LoginPage() {
   let {user, setUser} = useContext(UserContext);
   const params: any = useParams();
   const history = useHistory();
-  const { register, handleSubmit, watch, errors, setValue, control } = useForm();
+  const { handleSubmit, errors, control } = useForm();
   const [registerStep, setRegisterStep] = useState('start');
   const onSubmit = (values: any) => {
     // update step
@@ -34,6 +34,7 @@ function LoginPage() {
         <Card className="loginCard">
           <div className="cardContent">
             <h2>Login</h2>
+            <br />
             <Form>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Controller 
@@ -75,6 +76,9 @@ function LoginPage() {
               <Button htmlType="submit" className='loginButton'>Login</Button>
               </form>
             </Form>
+            <div className='register-info'>
+              <Link to='./register'>Or Register an Account for Dimension ({params.id}) here</Link>
+            </div>
           </div>
         </Card>
       </div>

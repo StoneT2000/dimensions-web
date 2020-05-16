@@ -3,7 +3,8 @@ import { Button } from 'antd';
 import { stopTournament, runTournament } from '../../actions/tournament';
 import { nanoid, Tournament } from 'dimensions-ai';
 import './index.scss';
-const TournamentActionButton = (props: {tournament: Tournament, dimensionID: nanoid, update?: Function}) => {
+import { TournamentMeta } from '../../contexts/tournament';
+const TournamentActionButton = (props: {tournament: TournamentMeta, dimensionID: nanoid, update?: Function}) => {
 
   let btns;
   let update = props.update ? props.update : () => {};

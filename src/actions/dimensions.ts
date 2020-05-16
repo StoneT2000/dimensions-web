@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { DimensionType, Match, Tournament, nanoid } from 'dimensions-ai';
 import { message } from 'antd';
+import { TournamentMeta } from '../contexts/tournament';
 
 // Returns all dimensions if no input
 export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
@@ -40,7 +41,7 @@ export const getMatchFromDimension = async (dimensionID: nanoid, matchID: nanoid
     });
   });
 }
-export const getTournamentFromDimension = async (dimensionID: nanoid, tournamentID: nanoid): Promise<Tournament> => {
+export const getTournamentFromDimension = async (dimensionID: nanoid, tournamentID: nanoid): Promise<TournamentMeta> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}`).then((res: AxiosResponse) => {
       resolve(res.data.tournament);

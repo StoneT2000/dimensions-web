@@ -5,7 +5,7 @@ import Card from '../../../components/Card';
 import { Form, Input, message, Button } from 'antd';
 import { useForm, Controller, ErrorMessage } from 'react-hook-form';
 import { registerUser } from '../../../actions/auth';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 
 function RegisterPage() {
   const params: any = useParams();
@@ -31,6 +31,7 @@ function RegisterPage() {
         <Card className="registerCard">
           <div className="cardContent">
             <h2>Register</h2>
+            <br />
             <Form>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Controller 
@@ -88,6 +89,9 @@ function RegisterPage() {
                 <Button htmlType="submit" className='registerButton'>Register</Button>
               </form>
             </Form>
+            <div className='login-info'>
+              <Link to='./login'>Login into Dimension ({params.id}) here</Link>
+            </div>
           </div>
         </Card>
       </div>

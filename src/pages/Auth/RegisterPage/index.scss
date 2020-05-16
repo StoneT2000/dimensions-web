@@ -10,5 +10,9 @@
   .registerCard {
     margin: auto;
     @include smack-center;
+    max-width: 90%;
+  }
+  .login-info {
+    margin-top: 12px;
   }
 }
