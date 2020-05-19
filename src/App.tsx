@@ -26,7 +26,6 @@ function App() {
   const [tournament, setTournament] = useState(defaultTournament);
   
   useEffect(() => {
-    console.log(cookie);
     if (cookie) {
       // verify cookie
       verifyToken(DIMENSION_ID, cookie).then(() => {

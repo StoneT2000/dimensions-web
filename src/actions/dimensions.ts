@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { DimensionType, Match, Tournament, nanoid } from 'dimensions-ai';
 import { message } from 'antd';
 import { TournamentMeta } from '../contexts/tournament';
+import { getToken } from '../utils/token';
 
 // Returns all dimensions if no input
 export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
