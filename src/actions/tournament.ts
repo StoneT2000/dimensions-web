@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
-import { Match, nanoid } from 'dimensions-ai';
+import { Match, nanoid, Player } from 'dimensions-ai';
 import { message } from 'antd';
 import { User } from '../UserContext';
 import { getToken } from '../utils/token';
+import { Database } from 'dimensions-ai/lib/Plugin/Database';
 
 
 export const getConfigs = async (dimensionID: number, tournamentID: number): Promise<any> => {
@@ -19,23 +20,27 @@ export const getRanks = async (dimensionID: nanoid, tournamentID: nanoid): Promi
   });
 }
 
+export const getMatch = async (dimensionID: nanoid, tournamentID: nanoid, matchID: nanoid): Promise<Match> => {
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/match/${matchID}`).then((res) => res.data.match)
+};
+
 export const getMatches = async (dimensionID: nanoid, tournamentID: nanoid): Promise<{[x in string]: Match}> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/match`).then((res: AxiosResponse) => {
       resolve(res.data.matches);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });
 }
 
-export const getMatchQueue = async (dimensionID: nanoid, tournamentID: nanoid): Promise<any> => {
+export const getMatchQueue = async (dimensionID: nanoid, tournamentID: nanoid): Promise<Array<Array<Player>>> => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/matchQueue`).then((res: AxiosResponse) => {
-      resolve(res.data.matches);
+      resolve(res.data.matchQueue);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });
@@ -49,7 +54,7 @@ export const runTournament = async (dimensionID: nanoid, tournamentID: nanoid): 
     }).then((res: AxiosResponse) => {
       resolve(res);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });
@@ -63,7 +68,7 @@ export const stopTournament = async (dimensionID: nanoid, tournamentID: nanoid):
     }).then((res: AxiosResponse) => {
       resolve(res);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });
@@ -74,11 +79,21 @@ export const removeTournament = async (dimensionID: nanoid, tournamentID: nanoid
     axios.post(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/stop`).then((res: AxiosResponse) => {
       resolve(res);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });
 }
+
+export const getPlayer = async (dimensionID: nanoid, tournamentID: nanoid, playerID: nanoid): Promise<Player> => {
+  let token = getToken();
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.player)
+}
+
+export const downloadBot = async (dimensionID: nanoid, tournamentID: nanoid, playerID: nanoid): Promise<any> => {
+  let token = getToken();
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}/bot`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.url)
+};
 
 export const uploadBot = async (dimensionID: nanoid, tournamentID: nanoid, name: string, file: File | undefined, user: User, path: string) => {
   if (!file) {

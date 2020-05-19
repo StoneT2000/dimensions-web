@@ -9,6 +9,10 @@ import { getTournamentFromDimension } from '../actions/dimensions';
 import { message } from "antd";
 import DefaultLayout from "../components/layouts/default";
 
+
+/**
+ * Auto stores tournament into context 
+ */
 function SetupTournament(props: any) {
   const params: any = useParams();
   const history = useHistory();
@@ -28,6 +32,8 @@ function SetupTournament(props: any) {
       getTournamentFromDimension(params.id, params.tournamentID).then((res) => {
         setTournament(res);
       }).catch(() => {
+        message.error('No tournament found with id ' + params.tournamentID);
+        history.push('../');
       });
     }
   }, []);

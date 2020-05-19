@@ -4,7 +4,6 @@
     @include smack-center;
   }
   .upload-bot {
-    margin-bottom: 24px;
     width: 100%;
   }
   .upload-wrapper {
@@ -12,5 +11,6 @@
     .ant-upload {
       width: 100%;
     }
+    margin-bottom: 2rem;;
   }
 }

@@ -59,7 +59,7 @@ export const verifyToken = async (dimensionID: nanoid, token: string) => {
     }).then((res: AxiosResponse) => {
       resolve(res);
     }).catch((error) => {
-      message.error(error.response.data.error.message);
+      // message.error(error.response.data.error.message);
       reject(error);
     });
   });

@@ -9,13 +9,14 @@ import { useParams, useHistory, Link } from 'react-router-dom';
 import { getMatchFromDimension } from '../../actions/dimensions';
 
 // NOTE!! Can import outside src as long as we dont use instanceof dimension or actually use it, we can just it for typings
-import { Agent, Match } from 'dimensions-ai';
+import Match from '../../components/Match';
+import { Agent, Match as DMatch } from 'dimensions-ai';
 
 let intv: any;
 function MatchPage() {
   const params: any = useParams();
   const history: any = useHistory();
-  const [match, setMatch] = useState<Match>();
+  const [match, setMatch] = useState<DMatch>();
   const [data, setData] = useState<Array<any>>([]);
   const columns = [
     {
@@ -77,25 +78,10 @@ function MatchPage() {
     <DefaultLayout>
       <div className='DimensionPage'>
         {match &&
-          <div>
-            <h2>{match.name}</h2>
-            <h4 className='meta-data-title'>Metadata</h4>
-            <p className='meta-data'>
-              id: {match.id} <br />
-              Creation Date: {match.creationDate} <br />
-              Match Status: {match.matchStatus} <br />
-              Time Step: {match.timeStep}
-            </p>
-            <h4>Match Actions</h4>
-            <MatchActionButton match={match} update={update} dimensionID={params.id}/>
-            <h4>Match Results:</h4>
-            {match.results ? <a target='_blank' href={process.env.REACT_APP_API + `/api/dimensions/${params.id}/match/${params.matchID}/results`}>Results</a> : 'No results yet'}
-            <h4>Agents / Players</h4>
-            <Table className='agentTable'
-              columns={columns}
-              dataSource={data}
-            />
-          </div> 
+          <Match
+            match={match}
+            dimensionID={params.id}
+          />
         }
       </div>
     </DefaultLayout>

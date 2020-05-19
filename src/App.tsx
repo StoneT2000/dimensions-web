@@ -10,10 +10,13 @@ import './styles/index.scss';
 import MainPage from './pages/MainPage';
 import DimensionPage from './pages/DimensionsPage';
 import MatchPage from './pages/MatchPage';
+import TournamentRankingsPage from './pages/TournamentRankingsPage';
 import TournamentPage from './pages/TournamentPage';
+import TournamentMatchPage from './pages/TournamentMatchPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import LoginPage from './pages/Auth/LoginPage';
 import UploadBotPage from './pages/UploadBotPage';
+import ProfilePage from './pages/ProfilePage';
 
 import { getCookie } from './utils/cookie';
 import { verifyToken, getUserFromToken } from './actions/auth';
@@ -51,6 +54,21 @@ function App() {
                 path="/dimensions/:id/tournaments/:tournamentID" 
                 exact 
                 render={() => <SetupTournament component={<TournamentPage />} />}
+              />
+              <Route 
+                path="/dimensions/:id/tournaments/:tournamentID/ranks" 
+                exact 
+                render={() => <SetupTournament component={<TournamentRankingsPage />} />}
+              />
+              <Route 
+                path="/dimensions/:id/tournaments/:tournamentID/user/:userID" 
+                exact 
+                render={() => <SetupTournament component={<ProfilePage />} />}
+              />
+              <Route 
+                path="/dimensions/:id/tournaments/:tournamentID/match/:matchID" 
+                exact 
+                render={() => <SetupTournament component={<TournamentMatchPage />} />}
               />
               <Route path="/dimensions/:id/tournaments/:tournamentID/upload" exact 
                 render={() => <SetupTournament component={<UploadBotPage />} />}

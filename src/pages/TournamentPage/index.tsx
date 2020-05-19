@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './index.scss';
-import { Tournament } from 'dimensions-ai';
+import { Player, Match } from 'dimensions-ai';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import DefaultLayout from "../../components/layouts/default";
 import { getTournamentFromDimension } from '../../actions/dimensions';
-import { getRanks } from '../../actions/tournament';
+import { getRanks, getMatchQueue, getMatches } from '../../actions/tournament';
 import TournamentActionButton from '../../components/TournamentActionButton';
 import { Table, Button } from 'antd';
 import UserContext from '../../UserContext';
@@ -13,75 +13,43 @@ import BackLink from '../../components/BackLink';
 import path from 'path';
 let intv: any;
 
-const trueskillCols = [
+const matchCols = [
   {
-    title: 'Player Name',
-    dataIndex: 'pname',
-  },
-  {
-    title: 'Score = µ - 3 * σ',
-    dataIndex: 'score',
+    title: 'Players',
+    dataIndex: 'players',
     render: (info: any) => {
-      let score = info.rankState.rating.mu - info.rankState.rating.sigma * 3;
       return (
-        <span>{score}</span>
+        <div>
+          {
+            info.map((a: any) => {
+              return <Link className='profile-link' to={path.join(window.location.pathname, `user/${a.id}`)}>{a.name}</Link>
+            })
+          }
+        </div>
       )
     }
   },
   {
-    title: 'Mu: µ',
-    dataIndex: 'score',
-    render: (info: any) => info.rankState.rating.mu
+    title: 'Creation Date',
+    dataIndex: 'cdate',
+    // render: (info: any) => <span>{info.rankState.rating.score}</span>
   },
   {
-    title: 'Sigma: σ',
-    dataIndex: 'score',
-    render: (info: any) => info.rankState.rating.sigma
+    title: 'Status',
+    dataIndex: 'status'
   },
   {
-    title: 'Matches Played',
-    dataIndex: 'matchesPlayed'
-  }
-];
-const winsCols = [
-  {
-    title: 'Player Name',
-    dataIndex: 'pname',
-  },
-  {
-    title: 'Wins',
-    dataIndex: 'wins',
-  },
-  {
-    title: 'Ties',
-    dataIndex: 'ties',
-  },
-  {
-    title: 'Losses',
-    dataIndex: 'losses',
-  },
-  {
-    title: 'Points',
-    dataIndex: 'points',
-  },
-  {
-    title: 'Matches Played',
-    dataIndex: 'matchesPlayed'
-  }
-]
-const eloCols = [
-  {
-    title: 'Player Name',
-    dataIndex: 'pname',
-  },
-  {
-    title: 'Score',
-    dataIndex: 'score',
-    render: (info: any) => <span>{info.rankState.rating.score}</span>
-  },
-  {
-    title: 'Matches Played',
-    dataIndex: 'matchesPlayed'
+    title: 'Link',
+    dataIndex: 'link',
+    render: (link: string) => {
+      return (
+        <Link to={link}>
+          <Button>
+            View
+          </Button>
+        </Link>
+      )
+    }
   }
 ]
 
@@ -89,28 +57,35 @@ const eloCols = [
 function TournamentPage(props: any) {
   const history = useHistory();
   let {user, setUser} = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
   const { tournament, setTournament } = useContext(TournamentContext);
+  const [matches, setMatches] = useState<Array<any>>([]);
   const params: any = useParams();
   // const [tournament, setTournament] = useState<Tournament>();
   //@ts-ignore
-  const [ranksystem, setRankSystem] = useState<Tournament.RankSystem>('trueskill');
-  const [data, setData] = useState<any>([]);
   const update = () => {
     let rankSystem = tournament.configs.rankSystem;
-    setRankSystem(rankSystem);
 
-    getRanks(params.id, params.tournamentID).then((res) => {
+    getMatches(params.id, params.tournamentID).then((res) => {
       console.log(res);
       let newData = [];
-      newData = res.map((info: any, ind: number) => {
+      let sorted = Object.values(res).sort((a, b) => {
+        return (new Date(a.creationDate)).getTime() - (new Date(b.creationDate).getTime());
+      })
+      newData = sorted.map((match, ind: number) => {
+        let namesAndID = match.agents.map((a) => {
+          return {name: a.name, id: a.tournamentID.id}
+        });
         return {
           key: `${ind}`,
-          pname: info.name,
-          score: info,
-          matchesPlayed: info.matchesPlayed
+          players: namesAndID,
+          cdate: (new Date(match.creationDate)).toLocaleString(),
+          status: match.matchStatus,
+          link: path.join(window.location.pathname, `/match/${match.id}`)
         }
       });
-      setData(newData);
+      setMatches(newData);
+      setLoading(false);
     });
   }
   useEffect(() => {
@@ -122,12 +97,15 @@ function TournamentPage(props: any) {
         <br />
         <BackLink to='../../'/>
         <h2>{tournament.name}</h2>
+        <Link className='ranks-link' to={
+          path.join(history.location.pathname, 'ranks')
+        }>Current Ranks</Link>
         <Button onClick={() => {
           history.push(path.join(history.location.pathname, 'upload'));
         }}>Upload Bot</Button>
         <h4 className='meta-data-title'>Tournament Metadata</h4>
         {tournament && 
-          [<p className='meta-data'>
+          <p className='meta-data'>
             id: {tournament.id} <br />
             Status: {tournament.status}
             <br />
@@ -135,29 +113,18 @@ function TournamentPage(props: any) {
               //@ts-ignore
               tournament.configs.loggingLevel
             } 
-          </p>]
+          </p>
         }
         {
           tournament && user.admin && 
           <TournamentActionButton dimensionID={params.id} tournament={tournament} update={update}/>
         }
-        
-        { ranksystem === 'trueskill' && 
-          <Table 
-            columns={trueskillCols}
-            dataSource={data}
-          />
-        }
-        { ranksystem === 'elo' && 
-          <Table 
-            columns={eloCols}
-            dataSource={data}
-          />
-        }
-        { ranksystem === 'wins' && 
-          <Table 
-            columns={winsCols}
-            dataSource={data}
+        <h3>Ongoing Matches in Tournament</h3>
+        {
+          <Table
+            columns={matchCols}
+            dataSource={matches}
+            loading={loading}
           />
         }
       </div>

@@ -3,6 +3,7 @@ import { DimensionType, Match, Tournament, nanoid } from 'dimensions-ai';
 import { message } from 'antd';
 import { TournamentMeta } from '../contexts/tournament';
 import { getToken } from '../utils/token';
+import { Database } from 'dimensions-ai/lib/Plugin/Database';
 
 // Returns all dimensions if no input
 export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
@@ -15,10 +16,14 @@ export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionTy
         resolve(res.data.dimension);
       }
     }).catch((error) => {
-      message.error(error.message);
       reject(error);
     })
   })
+}
+
+export const getUser = async (dimensionID: nanoid, playerID: nanoid): Promise<Database.User> => {
+  let token = getToken();
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/user/${playerID}`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.user)
 }
 
 
@@ -27,7 +32,6 @@ export const getMatchesFromDimension = async (dimensionID: nanoid): Promise<{[k 
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match`).then((res: AxiosResponse) => {
       resolve(res.data.matches);
     }).catch((error) => {
-      message.error(error.message);
       reject(error);
     });
   });
@@ -37,7 +41,6 @@ export const getMatchFromDimension = async (dimensionID: nanoid, matchID: nanoid
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/match/${matchID}`).then((res: AxiosResponse) => {
       resolve(res.data.match);
     }).catch((error) => {
-      message.error(error.message);
       reject(error);
     });
   });
@@ -47,7 +50,6 @@ export const getTournamentFromDimension = async (dimensionID: nanoid, tournament
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}`).then((res: AxiosResponse) => {
       resolve(res.data.tournament);
     }).catch((error) => {
-      message.error(error.message);
       reject(error);
     });
   });
@@ -59,7 +61,7 @@ export const getTournamentsFromDimension = async (dimensionID: nanoid): Promise<
     axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament`).then((res: AxiosResponse) => {
       resolve(res.data.tournaments);
     }).catch((error) => {
-      message.error(error.message);
+      // message.error(error.message);
       reject(error);
     });
   });

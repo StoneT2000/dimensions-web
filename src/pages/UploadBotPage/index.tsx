@@ -74,15 +74,17 @@ function UploadBotPage(props: any) {
                 rules={{ required: true }}
                 name='botname'
               />
-              <Upload
-                className='upload-wrapper'
-                onChange={handleFileChange}
-                customRequest={dummyRequest}
-              >
-                <Button className="upload-bot">
-                  <UploadOutlined /> Click to upload bot
-                </Button>
-              </Upload>
+              <div className='upload-wrapper'>
+                <Upload
+                  
+                  onChange={handleFileChange}
+                  customRequest={dummyRequest}
+                >
+                  <Button className="upload-bot">
+                    <UploadOutlined /> Click to upload bot
+                  </Button>
+                </Upload>
+              </div>
               <Controller 
                 as={
                   <Form.Item>
