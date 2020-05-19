@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from 'react';
 import './index.scss';
 import DefaultLayout from "../../components/layouts/default";
 import { useParams, useHistory } from 'react-router-dom';
-import { downloadBot } from '../../actions/tournament';
-import { Player } from 'dimensions-ai';
+import { downloadBot, getPlayerMatches } from '../../actions/tournament';
+import { Player, Match } from 'dimensions-ai';
 import { getUser } from '../../actions/dimensions';
 import { Database } from 'dimensions-ai/lib/Plugin/Database';
 import TournamentContext from '../../contexts/tournament';
 import { Skeleton, Divider, Button, message } from 'antd';
 import UserContext from '../../UserContext';
+import MatchList from '../../components/MatchList';
 
 function ProfilePage() {
   const params: any = useParams();
@@ -17,7 +18,7 @@ function ProfilePage() {
   const { user } = useContext(UserContext);
   const [stats, setStats] = useState<any>({});
   const { tournament } = useContext(TournamentContext);
-  // const [player, setPlayer] = useState<Player>();
+  const [matches, setMatches] = useState<Array<Match>>([]);
   const [ranksystem, setRankSystem] = useState<string>();
   useEffect(() => {
     if (tournament.id) {
@@ -34,7 +35,15 @@ function ProfilePage() {
       }).catch((err) => {
         message.error('No permissions');
         history.push('../');
-      })
+      });
+      getPlayerMatches(params.id, tournament.id, params.userID, 0, 20).then((matches) => {
+        matches = matches.map((m) => {
+          // @ts-ignore
+          m.matchStatus = "finished";
+          return m;
+        })
+        setMatches(matches);
+      });
     }
   }, [tournament]);
   return (
@@ -90,6 +99,11 @@ function ProfilePage() {
             }}>Download</Button>
           </div>
         }
+        <br />
+        <h3>Last 20 Matches</h3>
+        <MatchList 
+          matches={matches}
+        />
       </div>
     </DefaultLayout>
   );

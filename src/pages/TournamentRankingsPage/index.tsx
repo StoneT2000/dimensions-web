@@ -26,7 +26,7 @@ const trueskillCols = [
     title: 'Score = µ - 3 * σ',
     dataIndex: 'score',
     render: (info: any) => {
-      let score = info.rankState.rating.mu - info.rankState.rating.sigma * 3;
+      let score = (info.rankState.rating.mu - info.rankState.rating.sigma * 3).toFixed(2)
       return (
         <span>{score}</span>
       )
@@ -35,12 +35,12 @@ const trueskillCols = [
   {
     title: 'Mu: µ',
     dataIndex: 'score',
-    render: (info: any) => info.rankState.rating.mu
+    render: (info: any) => info.rankState.rating.mu.toFixed(2)
   },
   {
     title: 'Sigma: σ',
     dataIndex: 'score',
-    render: (info: any) => info.rankState.rating.sigma
+    render: (info: any) => info.rankState.rating.sigma.toFixed(2)
   },
   {
     title: 'Matches Played',

@@ -11,6 +11,7 @@ import UserContext from '../../UserContext';
 import TournamentContext from '../../contexts/tournament';
 import BackLink from '../../components/BackLink';
 import path from 'path';
+import MatchList from '../../components/MatchList';
 let intv: any;
 
 const matchCols = [
@@ -72,19 +73,7 @@ function TournamentPage(props: any) {
       let sorted = Object.values(res).sort((a, b) => {
         return (new Date(a.creationDate)).getTime() - (new Date(b.creationDate).getTime());
       })
-      newData = sorted.map((match, ind: number) => {
-        let namesAndID = match.agents.map((a) => {
-          return {name: a.name, id: a.tournamentID.id}
-        });
-        return {
-          key: `${ind}`,
-          players: namesAndID,
-          cdate: (new Date(match.creationDate)).toLocaleString(),
-          status: match.matchStatus,
-          link: path.join(window.location.pathname, `/match/${match.id}`)
-        }
-      });
-      setMatches(newData);
+      setMatches(sorted);
       setLoading(false);
     });
   }
@@ -121,10 +110,8 @@ function TournamentPage(props: any) {
         }
         <h3>Ongoing Matches in Tournament</h3>
         {
-          <Table
-            columns={matchCols}
-            dataSource={matches}
-            loading={loading}
+          <MatchList
+            matches={matches}
           />
         }
       </div>

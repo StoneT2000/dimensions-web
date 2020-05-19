@@ -90,6 +90,11 @@ export const getPlayer = async (dimensionID: nanoid, tournamentID: nanoid, playe
   return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.player)
 }
 
+export const getPlayerMatches = async (dimensionID: nanoid, tournamentID: nanoid, playerID: nanoid, offset: number = 0, limit: number = 10): Promise<Array<Match>> => {
+  let token = getToken();
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}/match?offset=${offset}&limit=${limit}&order=-1`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.matches)
+}
+
 export const downloadBot = async (dimensionID: nanoid, tournamentID: nanoid, playerID: nanoid): Promise<any> => {
   let token = getToken();
   return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}/bot`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.url)
