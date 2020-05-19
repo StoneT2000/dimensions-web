@@ -27,55 +27,62 @@ let cookie = getCookie(COOKIE_NAME);
 function App() {
   const [user, setUser] = useState(defaultUser);
   const [tournament, setTournament] = useState(defaultTournament);
-  
+  const [verifying, setVerifying] = useState(true);
   useEffect(() => {
     if (cookie) {
       // verify cookie
       verifyToken(DIMENSION_ID, cookie).then(() => {
-        setUser(getUserFromToken(cookie));
-        message.success("Welcome back");
-      });
+        let u = getUserFromToken(cookie);
+        setUser(u);
+        message.success("Welcome back " + u.username);
+      }).catch(() => {
+      }).finally(() => {
+        setVerifying(false);
+      })
     }
   }, []);
   return (
     <Router>
       <div>
-        <Switch>
-          <UserProvider value={{user: user, setUser: setUser}}>
-            <Route path="/" exact component={MainPage} />
-            <Route path="/dimensions" exact component={DimensionPage.DimensionsListPage} />
-            <Route path="/dimensions/:id" exact component={DimensionPage} />
-            <Route path="/dimensions/:id/register" exact component={RegisterPage} />
-            <Route path="/dimensions/:id/login" exact component={LoginPage} />
-            <Route path="/dimensions/:id/matches/:matchID" exact component={MatchPage} />
+        {
+          !verifying && 
+          <Switch>
+            <UserProvider value={{user: user, setUser: setUser}}>
+              <Route path="/" exact component={MainPage} />
+              <Route path="/dimensions" exact component={DimensionPage.DimensionsListPage} />
+              <Route path="/dimensions/:id" exact component={DimensionPage} />
+              <Route path="/dimensions/:id/register" exact component={RegisterPage} />
+              <Route path="/dimensions/:id/login" exact component={LoginPage} />
+              <Route path="/dimensions/:id/matches/:matchID" exact component={MatchPage} />
 
-            <TournamentProvider value={{tournament: tournament, setTournament: setTournament}}>
-              <Route 
-                path="/dimensions/:id/tournaments/:tournamentID" 
-                exact 
-                render={() => <SetupTournament component={<TournamentPage />} />}
-              />
-              <Route 
-                path="/dimensions/:id/tournaments/:tournamentID/ranks" 
-                exact 
-                render={() => <SetupTournament component={<TournamentRankingsPage />} />}
-              />
-              <Route 
-                path="/dimensions/:id/tournaments/:tournamentID/user/:userID" 
-                exact 
-                render={() => <SetupTournament component={<ProfilePage />} />}
-              />
-              <Route 
-                path="/dimensions/:id/tournaments/:tournamentID/match/:matchID" 
-                exact 
-                render={() => <SetupTournament component={<TournamentMatchPage />} />}
-              />
-              <Route path="/dimensions/:id/tournaments/:tournamentID/upload" exact 
-                render={() => <SetupTournament component={<UploadBotPage />} />}
-              />
-            </TournamentProvider>
-          </UserProvider>
-        </Switch>
+              <TournamentProvider value={{tournament: tournament, setTournament: setTournament}}>
+                <Route 
+                  path="/dimensions/:id/tournaments/:tournamentID" 
+                  exact 
+                  render={() => <SetupTournament component={<TournamentPage />} />}
+                />
+                <Route 
+                  path="/dimensions/:id/tournaments/:tournamentID/ranks" 
+                  exact 
+                  render={() => <SetupTournament component={<TournamentRankingsPage />} />}
+                />
+                <Route 
+                  path="/dimensions/:id/tournaments/:tournamentID/user/:userID" 
+                  exact 
+                  render={() => <SetupTournament component={<ProfilePage />} />}
+                />
+                <Route 
+                  path="/dimensions/:id/tournaments/:tournamentID/match/:matchID" 
+                  exact 
+                  render={() => <SetupTournament component={<TournamentMatchPage />} />}
+                />
+                <Route path="/dimensions/:id/tournaments/:tournamentID/upload" exact 
+                  render={() => <SetupTournament component={<UploadBotPage />} />}
+                />
+              </TournamentProvider>
+            </UserProvider>
+          </Switch>
+        }
       </div>
     </Router>
   );

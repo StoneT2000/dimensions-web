@@ -2,23 +2,23 @@ import React, { useEffect, useState, useContext } from 'react';
 import './index.scss';
 import DefaultLayout from "../../components/layouts/default";
 import { useParams, useHistory } from 'react-router-dom';
-import { getPlayer, downloadBot } from '../../actions/tournament';
-import { Player, Tournament } from 'dimensions-ai';
+import { downloadBot } from '../../actions/tournament';
+import { Player } from 'dimensions-ai';
 import { getUser } from '../../actions/dimensions';
 import { Database } from 'dimensions-ai/lib/Plugin/Database';
 import TournamentContext from '../../contexts/tournament';
 import { Skeleton, Divider, Button, message } from 'antd';
 import UserContext from '../../UserContext';
 
-function ProfilePage(props: any) {
+function ProfilePage() {
   const params: any = useParams();
   const history = useHistory();
-  const [player, setPlayer] = useState<Player>();
   const [dbuser, setUser] = useState<Database.User>();
   const { user } = useContext(UserContext);
   const [stats, setStats] = useState<any>({});
   const { tournament } = useContext(TournamentContext);
-  const [rankSystem, setRankSystem] = useState<string>();
+  // const [player, setPlayer] = useState<Player>();
+  const [ranksystem, setRankSystem] = useState<string>();
   useEffect(() => {
     if (tournament.id) {
       setRankSystem(tournament.configs.rankSystem);
@@ -28,7 +28,8 @@ function ProfilePage(props: any) {
         if (res.statistics) {
           let s = res.statistics![tourneyKey];
           setStats(s);
-          setPlayer(s.player);
+          console.log(s);
+          // setPlayer(s.player);
         }
       }).catch((err) => {
         message.error('No permissions');
@@ -40,14 +41,35 @@ function ProfilePage(props: any) {
     <DefaultLayout>
       <div className='ProfilePage'>
         <h1>Profile page</h1>
-        <h2>User: {user?.username}</h2>
+        <h2>{dbuser?.username}</h2>
         <Divider></Divider>
         <div className="statistics">
           <h3>Statistics for Tournament: {tournament.name}</h3>
           <Skeleton loading={!stats.player}>
             <p>Matches Played with Current Bot: {stats.matchesPlayed}</p>
-            <p>Score</p>
-            {}
+            { ranksystem === 'trueskill' && 
+              <div>
+                {stats.rankState && 
+                [<p>Score (Mu - 3 * Sigma): {stats?.rankState.rating.mu - 3 * stats?.rankState.rating.sigma}</p>,
+                  <p>Mu (µ): {stats?.rankState.rating.mu}</p>,
+                  <p>Sigma (σ): {stats?.rankState.rating.sigma}</p>]
+                }
+              </div>
+            }
+            { ranksystem === 'elo' && 
+              <div>
+                {stats.rankState && 
+                  <p>Score: {stats.rankState.score}</p>
+                }
+              </div>
+            }
+            { ranksystem === 'wins' && 
+              <div>
+                <p>Wins: {stats.wins}</p>
+                <p>Ties: {stats.ties}</p>
+                <p>Losses: {stats.losses}</p>
+              </div>
+            }
           </Skeleton>
         </div>
         {

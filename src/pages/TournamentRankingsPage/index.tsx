@@ -15,7 +15,11 @@ let intv: any;
 
 const trueskillCols = [
   {
-    title: 'Player Name',
+    title: 'User',
+    dataIndex: 'username',
+  },
+  {
+    title: 'Bot name',
     dataIndex: 'pname',
   },
   {
@@ -45,7 +49,11 @@ const trueskillCols = [
 ];
 const winsCols = [
   {
-    title: 'Player Name',
+    title: 'User',
+    dataIndex: 'username',
+  },
+  {
+    title: 'Bot name',
     dataIndex: 'pname',
   },
   {
@@ -71,7 +79,11 @@ const winsCols = [
 ]
 const eloCols = [
   {
-    title: 'Player Name',
+    title: 'User',
+    dataIndex: 'username',
+  },
+  {
+    title: 'Bot name',
     dataIndex: 'pname',
   },
   {
@@ -88,6 +100,8 @@ const eloCols = [
 
 function TournamentPage(props: any) {
   const history = useHistory();
+  const [loading, setLoading] = useState(true);
+  const [ updateTime, setUpdateTime ] = useState<Date>();
   let {user, setUser} = useContext(UserContext);
   const { tournament, setTournament } = useContext(TournamentContext);
   const params: any = useParams();
@@ -100,17 +114,19 @@ function TournamentPage(props: any) {
     setRankSystem(rankSystem);
 
     getRanks(params.id, params.tournamentID).then((res) => {
-      console.log(res);
       let newData = [];
       newData = res.map((info: any, ind: number) => {
         return {
           key: `${ind}`,
+          username: <Link to={`${path.join(window.location.pathname, `../user/${info.id}`)}`}>{info.player.username}</Link>,
           pname: info.name,
           score: info,
           matchesPlayed: info.matchesPlayed
         }
       });
       setData(newData);
+      setLoading(false);
+      setUpdateTime(new Date());
     });
   }
   useEffect(() => {
@@ -123,20 +139,13 @@ function TournamentPage(props: any) {
         <BackLink to='../'/>
         <h2>{tournament.name}</h2>
         <Button onClick={() => {
-          history.push(path.join(history.location.pathname, 'upload'));
+          history.push(path.join(history.location.pathname, '../upload'));
         }}>Upload Bot</Button>
-        <h4 className='meta-data-title'>Tournament Metadata</h4>
-        {tournament && 
-          [<p className='meta-data'>
-            id: {tournament.id} <br />
-            Status: {tournament.status}
-            <br />
-            Logging Level: {
-              tournament.configs.loggingLevel
-              // Logger.LEVEL[tournament.configs.loggingLevel]
-            } 
-          </p>]
-        }
+        <Button className='refresh-btn' onClick={() => {
+          update();
+        }}>Refresh Leaderboard</Button>
+        <br />
+        <br />
         {
           tournament && user.admin && 
           <TournamentActionButton dimensionID={params.id} tournament={tournament} update={update}/>
@@ -144,21 +153,27 @@ function TournamentPage(props: any) {
         
         { ranksystem === 'trueskill' && 
           <Table 
+            loading={loading}
             columns={trueskillCols}
             dataSource={data}
           />
         }
         { ranksystem === 'elo' && 
           <Table 
+            loading={loading}
             columns={eloCols}
             dataSource={data}
           />
         }
         { ranksystem === 'wins' && 
           <Table 
+            loading={loading}
             columns={winsCols}
             dataSource={data}
           />
+        }
+        { updateTime && 
+          <p>Last updated: {updateTime?.toLocaleString()}</p>
         }
       </div>
     </DefaultLayout>
