@@ -47,7 +47,7 @@ const MatchList = (props:
           <div>
             {
               agents.map((a) => {
-                return <Link className='profile-link' to={path.join(window.location.pathname, `user/${a.tournamentID.id}`)}>{a.name}</Link>
+                return <Link className='profile-link' to={`/dimensions/${params.id}/tournaments/${params.tournamentID}/user/${a.tournamentID.id}`}>{a.name}</Link>
               })
             }
           </div>
