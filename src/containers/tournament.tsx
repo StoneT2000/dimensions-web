@@ -2,13 +2,11 @@
  * Adds tournament and dimension to context
  */
 
-import React, { Component, useContext, useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { useParams, useHistory } from "react-router-dom";
 import TournamentContext from '../contexts/tournament';
 import { getTournamentFromDimension } from '../actions/dimensions';
 import { message } from "antd";
-import DefaultLayout from "../components/layouts/default";
-
 
 /**
  * Auto stores tournament into context 

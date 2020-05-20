@@ -29,7 +29,6 @@ function ProfilePage() {
         if (res.statistics) {
           let s = res.statistics![tourneyKey];
           setStats(s);
-          console.log(s);
           // setPlayer(s.player);
         }
       }).catch((err) => {

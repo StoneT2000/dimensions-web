@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './index.scss';
-import { Table, message} from 'antd';
+import { Table} from 'antd';
 
 import DefaultLayout from '../../components/layouts/default';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { getDimension, getMatchesFromDimension, getTournamentsFromDimension } from '../../actions/dimensions';
 
 // NOTE!! Can import outside src as long as we dont use instanceof dimension or actually use it, we can just it for typings
 import { DimensionType, Match, Tournament } from 'dimensions-ai';
 import DimensionCard from '../../components/DimensionCard';
-import MatchActionButton from '../../components/MatchActionButton';
 import { join } from 'path';
 import BackLink from '../../components/BackLink';
 import MatchList from '../../components/MatchList';
 
-
-let intv: any;
-function DimensionsPage(props: any) {
+function DimensionsPage() {
   const params: any = useParams();
-  const history: any = useHistory();
   const [dimension, setDimension] = useState<DimensionType>();
   const [matches, setMatches] = useState<{[x in string]: Match}>({});
-  const [data, setData] = useState<Array<any>>([]);
   const [tourneyData, setTourneyData] = useState<Array<any>>([]);
 
   const tourneyColumns = [
@@ -37,11 +32,6 @@ function DimensionsPage(props: any) {
     },
   ]
   
-  const startRefresh = () => {
-     intv = setInterval(() => {
-      
-    }, 1000);
-  }
   const update = () => {
     getDimension(params.id).then((res) => {
       if (!(res instanceof Array))  {
@@ -63,19 +53,13 @@ function DimensionsPage(props: any) {
       else {
         console.error("something wrong happened");
       }
-    }).catch(() => {
-      clearInterval(intv);
     });
   }
   useEffect(() => {
     if (params.id) {
       update();
-      // startRefresh();
     }
-    return () => {
-      clearInterval(intv);
-    }
-  }, []);
+  }, [params.id]);
   return (
     <DefaultLayout>
       <div className='DimensionPage'>

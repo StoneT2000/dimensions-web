@@ -1,77 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import './index.scss';
-import { message, Table } from 'antd';
 
 import DefaultLayout from '../../components/layouts/default';
-import MatchActionButton from '../../components/MatchActionButton';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { getMatchFromDimension } from '../../actions/dimensions';
 
 // NOTE!! Can import outside src as long as we dont use instanceof dimension or actually use it, we can just it for typings
 import Match from '../../components/Match';
-import { Agent, Match as DMatch } from 'dimensions-ai';
+import { Match as DMatch } from 'dimensions-ai';
 
-let intv: any;
 function MatchPage() {
   const params: any = useParams();
   const history: any = useHistory();
   const [match, setMatch] = useState<DMatch>();
-  const [data, setData] = useState<Array<any>>([]);
-  const columns = [
-    {
-      title: 'Agent Name',
-      dataIndex: 'agentname',
-      render: (agent: Agent) => <Link to={`${history.location.pathname}/agents/${agent.id}`}>{agent.name}</Link>,
-    },
-    {
-      title: 'Creation Date',
-      dataIndex: 'creationdate',
-    },
-    {
-      title: 'Source',
-      dataIndex:'src'
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (status: Agent.Status) => <span>{status}</span>
-    },
-  ];
-  const startRefresh = () => {
-    intv = setInterval(() => {
-      
-    }, 500);
-  }
+
   const update = () => {
     getMatchFromDimension(params.id, params.matchID).then((res) => {
       if (!(res instanceof Array))  {
         setMatch(res);
-        let newData = res.agents.map((agent) => {
-          return {
-            src: agent.src,
-            agentname: agent,
-            creationdate: agent.creationDate,
-            status: agent.status
-          }
-        })
-        setData(newData);
       }
       else {
         console.error("something wrong happened");
       }
-    }).catch((error) => {
+    }).catch(() => {
       history.push('../');
-      clearInterval(intv);
     });
   }
   useEffect(() => {
     if (params.matchID) {
-      // startRefresh();
       update();
-    }
-    return () => {
-      clearInterval(intv);
     }
   }, []);
   return (

@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './index.scss';
-import { Tournament, Logger } from 'dimensions-ai';
+import { Tournament } from 'dimensions-ai';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import DefaultLayout from "../../components/layouts/default";
-import { getTournamentFromDimension } from '../../actions/dimensions';
 import { getRanks } from '../../actions/tournament';
 import TournamentActionButton from '../../components/TournamentActionButton';
 import { Table, Button } from 'antd';
@@ -11,7 +10,6 @@ import UserContext from '../../UserContext';
 import TournamentContext from '../../contexts/tournament';
 import BackLink from '../../components/BackLink';
 import path from 'path';
-let intv: any;
 
 const trueskillCols = [
   {
@@ -98,12 +96,12 @@ const eloCols = [
 ]
 
 
-function TournamentPage(props: any) {
+function TournamentPage() {
   const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [ updateTime, setUpdateTime ] = useState<Date>();
-  let {user, setUser} = useContext(UserContext);
-  const { tournament, setTournament } = useContext(TournamentContext);
+  const { user } = useContext(UserContext);
+  const { tournament } = useContext(TournamentContext);
   const params: any = useParams();
   // const [tournament, setTournament] = useState<Tournament>();
   //@ts-ignore
@@ -131,7 +129,7 @@ function TournamentPage(props: any) {
   }
   useEffect(() => {
     update();
-  }, [tournament]);
+  }, [tournament, params.id, params.tournamentID]);
   return (
     <DefaultLayout>
       <div className='TournamentRankingsPage'>

@@ -3,8 +3,8 @@ import './index.scss';
 import DefaultLayout from "../../components/layouts/default";
 import { getDimension } from '../../actions/dimensions';
 import DimensionCard from '../../components/DimensionCard';
-import { DimensionType, Match } from 'dimensions-ai';
-function MainPage(props: any) {
+import { DimensionType } from 'dimensions-ai';
+function MainPage() {
   const [dimensions, setDimensions] = useState<{[x in string]: DimensionType}>({});
   useEffect(() => {
     getDimension().then((res: any) => {
@@ -24,7 +24,6 @@ function MainPage(props: any) {
             {
               dimensions &&
               Object.values(dimensions).map((key, ind) => {
-                console.log(key);
                 let dim = key;
                 return (
                   <DimensionCard dimension={dim}/>

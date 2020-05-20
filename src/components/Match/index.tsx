@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import MatchActionButton from '../MatchActionButton';
 import './index.scss';
 import { Table } from 'antd';
@@ -46,7 +46,7 @@ const Match = (props: {match: DMatch, dimensionID: nanoid}) => {
         <MatchActionButton match={match} dimensionID={id}/>
       }
       <h4>Match Results:</h4>
-      {match.results ? <a target='_blank' href={process.env.REACT_APP_API + `/api/dimensions/${id}/match/${match.id}/results`}>Results</a> : 'No results yet'}
+      {match.results ? <a target='_blank' rel="noopener noreferrer" href={process.env.REACT_APP_API + `/api/dimensions/${id}/match/${match.id}/results`}>Results</a> : 'No results yet'}
       <h4>Agents / Players</h4>
       <Table className='agentTable'
         columns={columns}

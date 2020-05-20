@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './index.scss';
 import DefaultLayout from "../../../components/layouts/default";
 import Card from '../../../components/Card';
 import { Form, Input, message, Button } from 'antd';
-import { useForm, Controller, ErrorMessage } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { registerUser } from '../../../actions/auth';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
 function RegisterPage() {
   const params: any = useParams();
   const history = useHistory();
-  const { register, handleSubmit, watch, errors, setValue, control } = useForm();
-  const [registerStep, setRegisterStep] = useState('start');
+  const { handleSubmit, watch, errors, control } = useForm();
   const onSubmit = (values: any) => {
-    // update step
-    setRegisterStep('processing');
     if(errors.confirmPassword) {
       handlePasswordErrors(errors)
     }
-    
-    console.log(values);
+  
     registerUser(params.id, values).then((res) => {
       message.success('Registered! Redirecting to login page');
       history.push('/dimensions/' + params.id + '/login');
@@ -75,7 +71,7 @@ function RegisterPage() {
                   }
                   name='confirmPassword'
                   control={control}
-                  rules={{ required: true, validate: (value) => watch('password') == value }}
+                  rules={{ required: true, validate: (value) => watch('password') === value }}
                 />
               
                 {errors.username && <p className='danger'>Missing username</p>}

@@ -4,7 +4,6 @@ import './index.scss';
 import { Match, Agent } from 'dimensions-ai';
 import { Link, useParams } from 'react-router-dom';
 import { Table } from 'antd';
-import path from 'path';
 import MatchActionButton from '../MatchActionButton';
 import UserContext from '../../UserContext';
 
@@ -47,7 +46,7 @@ const MatchList = (props:
           <div>
             {
               agents.map((a) => {
-                return <Link className='profile-link' to={`/dimensions/${params.id}/tournaments/${params.tournamentID}/user/${a.tournamentID.id}`}>{a.name}</Link>
+                return <Link className='profile-link' target='_blank' rel="noopener noreferrer" to={`/dimensions/${params.id}/tournaments/${params.tournamentID}/user/${a.tournamentID.id}`}>{a.name}</Link>
               })
             }
           </div>
@@ -62,10 +61,9 @@ const MatchList = (props:
       title: 'Result',
       dataIndex: 'result',
       render: (match: Match) => {
-        console.log(match.results);
         return (
           <>
-           {match.results ? <a target='_blank' href={process.env.REACT_APP_API + `/api/dimensions/${params.id}/match/${match.id}/results`}>Results</a> : 'No results yet'}
+           {match.results ? <a target='_blank' rel="noopener noreferrer" href={process.env.REACT_APP_API + `/api/dimensions/${params.id}/match/${match.id}/results`}>Results</a> : 'No results yet'}
           </>
         )
       }
@@ -86,7 +84,6 @@ const MatchList = (props:
   useEffect(() => {
     let newData: Array<any> = [];
     if (props.matches.length) {
-      console.log(props.matches);
       newData = (props.matches as Array<any>);
       newData = newData.map((match) => {
         return {

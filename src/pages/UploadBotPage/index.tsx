@@ -4,7 +4,7 @@ import DefaultLayout from "../../components/layouts/default";
 import { Form, Input, Button, Upload, message } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import Card from '../../components/Card';
-import { useParams, Redirect, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
 import TournamentContext from '../../contexts/tournament';
 import { uploadBot } from '../../actions/tournament';
@@ -12,8 +12,8 @@ import UserContext from '../../UserContext';
 import path from 'path';
 
 
-function UploadBotPage(props: any) {
-  const { register, handleSubmit, errors, control, setValue, getValues } = useForm();
+function UploadBotPage() {
+  const { handleSubmit, control} = useForm();
   const [botFile, setFile] = useState<any>();
   const { tournament } = useContext(TournamentContext);
   const { user } = useContext(UserContext);
@@ -24,14 +24,11 @@ function UploadBotPage(props: any) {
     history.push(path.join(window.location.pathname, '../../../login'));
   }, []);
   const onSubmit = (values: any) => {
-    console.log(values);
-    console.log(botFile);
     uploadBot(params.id, tournament.id, values.botname, botFile, user, values.path).then(() => {
       message.success('Succesfully uploaded bot');
     });
   }
   const dummyRequest = ({ file, onSuccess }: any) => {
-    console.log(file, onSuccess);
     setTimeout(() => {
       onSuccess('ok');
     }, 0);
@@ -42,7 +39,7 @@ function UploadBotPage(props: any) {
       // setLoading('loading');
     }
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+
     }
     if (info.file.status === 'done') {
       message.success(`${info.file.name} file uploaded successfully`);

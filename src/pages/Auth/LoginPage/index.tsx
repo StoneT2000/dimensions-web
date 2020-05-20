@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import './index.scss';
 import DefaultLayout from "../../../components/layouts/default";
 import Card from '../../../components/Card';
 import { Form, Input, message, Button } from 'antd';
-import { useForm, Controller, ErrorMessage } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { loginUser, getUserFromToken } from '../../../actions/auth';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import UserContext from '../../../UserContext';
@@ -13,12 +13,10 @@ function LoginPage() {
   const params: any = useParams();
   const history = useHistory();
   const { handleSubmit, errors, control } = useForm();
-  const [registerStep, setRegisterStep] = useState('start');
   const onSubmit = (values: any) => {
     // update step
-    setRegisterStep('processing');
+    // setRegisterStep('processing');
     
-    console.log(values);
     loginUser(params.id, values).then((res: any) => {
       setUser(getUserFromToken(res));
       message.success('Logged in!');

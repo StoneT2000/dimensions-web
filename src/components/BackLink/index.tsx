@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button } from 'antd';
 import './index.scss';
 import { Link } from 'react-router-dom';

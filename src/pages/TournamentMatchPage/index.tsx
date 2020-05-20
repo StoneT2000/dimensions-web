@@ -7,7 +7,7 @@ import TournamentContext from '../../contexts/tournament';
 import { useParams } from 'react-router-dom';
 import { Match as DMatch } from 'dimensions-ai';
 import BackLink from '../../components/BackLink';
-function TournamentMatchPage(props: any) {
+function TournamentMatchPage() {
   const { tournament } = useContext(TournamentContext);
   const [match, setMatch] = useState<DMatch>();
   const params: any = useParams();
@@ -17,7 +17,7 @@ function TournamentMatchPage(props: any) {
         setMatch(res);
       });
     }
-  }, [tournament]);
+  }, [tournament, params.id, params.matchID]);
   return (
     <DefaultLayout>
       <div className='TournamentMatchPage'>

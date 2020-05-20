@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
 import { DimensionType, Match, Tournament, nanoid } from 'dimensions-ai';
-import { message } from 'antd';
 import { TournamentMeta } from '../contexts/tournament';
 import { getToken } from '../utils/token';
 import { Database } from 'dimensions-ai/lib/Plugin/Database';
