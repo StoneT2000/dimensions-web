@@ -27,7 +27,7 @@ let cookie = getCookie(COOKIE_NAME);
 function App() {
   const [user, setUser] = useState(defaultUser);
   const [tournament, setTournament] = useState(defaultTournament);
-  const [verifying, setVerifying] = useState(true);
+  const [verifying, setVerifying] = useState(false);
   useEffect(() => {
     if (cookie) {
       // verify cookie
@@ -37,8 +37,11 @@ function App() {
         message.success("Welcome back " + u.username);
       }).catch(() => {
       }).finally(() => {
-        setVerifying(false);
+        // setVerifying(false);
       })
+    }
+    else {
+      // setVerifying(false);
     }
   }, []);
   return (
