@@ -58,6 +58,17 @@ const MatchList = (props:
       dataIndex: 'creationdate',
     },
     {
+      title: 'Replay',
+      dataIndex: 'replay',
+      render: (match: Match) => {
+        return (
+          <>
+            {match.id ? <a target='_blank' rel="noopener noreferrer" href={process.env.REACT_APP_API + `/api/dimensions/${params.id}/match/${match.id}/replay`}>Replay</a> : 'No Replay'}
+          </>
+        )
+      }
+    },
+    {
       title: 'Result',
       dataIndex: 'result',
       render: (match: Match) => {
@@ -93,7 +104,8 @@ const MatchList = (props:
           players: match.agents,
           creationdate: match.creationDate,
           status: match.matchStatus,
-          action: match
+          action: match,
+          replay: match
         }
       });
     }
@@ -111,7 +123,8 @@ const MatchList = (props:
             players: match.agents,
             creationdate: match.creationDate,
             status: match.matchStatus,
-            action: match
+            action: match,
+            replay: match
           });
         }
         

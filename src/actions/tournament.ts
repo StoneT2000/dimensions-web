@@ -100,6 +100,12 @@ export const downloadBot = async (dimensionID: nanoid, tournamentID: nanoid, pla
   return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/player/${playerID}/bot`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.url)
 };
 
+export const downloadReplay = async (dimensionID: nanoid, tournamentID: nanoid, matchID: nanoid): Promise<any> => {
+  let token = getToken();
+  return axios.get(process.env.REACT_APP_API + `/api/dimensions/${dimensionID}/tournament/${tournamentID}/match/${matchID}/replay`, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.data.url)
+};
+
+
 export const uploadBot = async (dimensionID: nanoid, tournamentID: nanoid, name: string, file: File | undefined, user: User, path: string) => {
   if (!file) {
     throw new Error('no file!');

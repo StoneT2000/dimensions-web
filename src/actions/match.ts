@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { DimensionType, nanoid } from 'dimensions-ai';
+import { getToken } from '../utils/token';
 
 // Returns all dimensions if no input
 export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionType> | DimensionType> => {
@@ -16,7 +17,6 @@ export const getDimension = async (id: nanoid = '-1'): Promise<Array<DimensionTy
     })
   })
 }
-
 
 export const runMatch = async (dimensionID:nanoid, matchID: nanoid): Promise<any> => {
   return new Promise((resolve, reject) => {
