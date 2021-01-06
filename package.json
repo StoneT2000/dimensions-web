@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "dependencies": {
     "antd": "^4.1.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dimensions-ai": "^2.6.1",
     "express": "^4.17.1",
