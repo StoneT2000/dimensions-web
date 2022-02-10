@@ -7,7 +7,7 @@
     "cors": "^2.8.5",
     "dimensions-ai": "^2.6.1",
     "express": "^4.17.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^5.7.2",
